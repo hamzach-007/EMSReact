@@ -1,0 +1,62 @@
+import React, { Component } from 'react';
+import ReactDOM from "react-dom";
+import ReactDataGrid from "react-data-grid";
+// import 'react-data-grid/dist'
+// import 'react-data-grid/dist/react-data-grid.css';
+
+const columns = [
+    { key: "id", name: "ID", editable: true },
+    { key: "title", name: "Title", editable: true },
+    { key: "complete", name: "Complete", editable: true }
+  ];
+  
+  const rows = [
+    { id: 0, title: "Task 1", complete: 20 },
+    { id: 1, title: "Task 2", complete: 40 },
+    { id: 2, title: "Task 3", complete: 60 }
+  ];
+
+class Users extends Component{
+    
+    constructor (props) {
+        super(props)
+        this.state = {
+          columns: [],
+          rows: [{ id: 0, title: "Task 1", complete: 20 },
+          { id: 1, title: "Task 2", complete: 40 },
+          { id: 2, title: "Task 3", complete: 60 }]
+        }
+        this.rowGetter = this.rowGetter.bind(this);     //here
+    }
+    state = { rows };
+
+    onGridRowsUpdated = ({ fromRow, toRow, updated }) => {
+        this.setState(state => {
+          const rows = state.rows.slice();
+          for (let i = fromRow; i <= toRow; i++) {
+            rows[i] = { ...rows[i], ...updated };
+          }
+          return { rows };
+        });
+      };
+
+      rowGetter = (i) => {
+        return this.state.rows[i];
+      }
+
+      render() {
+        return (
+          <ReactDataGrid
+            columns={columns}
+            rowGetter={i => this.state.rows[i]}
+            rowsCount={3}
+            onGridRowsUpdated={this.onGridRowsUpdated}
+            enableCellSelect={true}
+          />
+        );
+      }
+     
+
+}
+
+export default Users
